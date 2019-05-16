@@ -29,4 +29,8 @@ export class CategoriesPage {
       error => {});
   }
 
+  showProducts() {
+    this.navCtrl.push('ProductsPage');
+  }
+
 }
