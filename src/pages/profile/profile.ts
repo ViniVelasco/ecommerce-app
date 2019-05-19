@@ -30,22 +30,23 @@ export class ProfilePage {
   }
 
   ionViewDidLoad() {
-   this.loadData();
+    this.loadData();
   }
 
   loadData() {
     let localUser = this.storage.getLocalUser();
-    if(localUser && localUser.email) {
+    if (localUser && localUser.email) {
       this.clientService.findByEmail(localUser.email)
         .subscribe(response => {
           this.client = response as ClientDTO;
+          this.profileImage = null;
           this.getImageIfExists();
         },
-        error => {
-          if(error.status == 403) {
-            this.navCtrl.setRoot('HomePage');
-          }
-        });
+          error => {
+            if (error.status == 403) {
+              this.navCtrl.setRoot('HomePage');
+            }
+          });
     } else {
       this.navCtrl.setRoot('HomePage');
     }
@@ -53,27 +54,27 @@ export class ProfilePage {
 
   getImageIfExists() {
     this.clientService.getImageFromBucket(this.client.id)
-    .subscribe(response => {
-      this.client.imageUrl = `${API_CONFIG.bucketBaseUrl}/cp${this.client.id}.jpg`;
-      this.blobToDataURL(response).then(dataUrl => {
-        let str : string = dataUrl as string;
-        this.profileImage = this.sanitizer.bypassSecurityTrustUrl(str);
-      });
-    },
-    error => {
-      this.profileImage = 'assets/imgs/avatar-blank.png';
-    })
+      .subscribe(response => {
+        this.client.imageUrl = `${API_CONFIG.bucketBaseUrl}/cp${this.client.id}.jpg`;
+        this.blobToDataURL(response).then(dataUrl => {
+          let str: string = dataUrl as string;
+          this.profileImage = this.sanitizer.bypassSecurityTrustUrl(str);
+        });
+      },
+        error => {
+          this.profileImage = 'assets/imgs/avatar-blank.png';
+        });
   }
 
- // https://gist.github.com/frumbert/3bf7a68ffa2ba59061bdcfc016add9ee
- blobToDataURL(blob) {
-  return new Promise((fulfill, reject) => {
+  // https://gist.github.com/frumbert/3bf7a68ffa2ba59061bdcfc016add9ee
+  blobToDataURL(blob) {
+    return new Promise((fulfill, reject) => {
       let reader = new FileReader();
       reader.onerror = reject;
       reader.onload = (e) => fulfill(reader.result);
       reader.readAsDataURL(blob);
-  })
-}
+    })
+  }
 
   getCameraPicture() {
 
@@ -87,10 +88,8 @@ export class ProfilePage {
     }
 
     this.camera.getPicture(options).then((imageData) => {
-     // imageData is either a base64 encoded string or a file URI
-     // If it's base64 (DATA_URL):
-     this.picture = 'data:image/png;base64,' + imageData;
-     this.cameraOn = false;
+      this.picture = 'data:image/png;base64,' + imageData;
+      this.cameraOn = false;
     }, (err) => {
       this.cameraOn = false;
     });
@@ -109,10 +108,8 @@ export class ProfilePage {
     }
 
     this.camera.getPicture(options).then((imageData) => {
-     // imageData is either a base64 encoded string or a file URI
-     // If it's base64 (DATA_URL):
-     this.picture = 'data:image/png;base64,' + imageData;
-     this.cameraOn = false;
+      this.picture = 'data:image/png;base64,' + imageData;
+      this.cameraOn = false;
     }, (err) => {
       this.cameraOn = false;
     });
@@ -124,7 +121,8 @@ export class ProfilePage {
         this.picture = null;
         this.getImageIfExists();
       },
-      error => {});
+        error => {
+        });
   }
 
   cancel() {
