@@ -55,6 +55,7 @@ export class ProfilePage {
   getImageIfExists() {
     this.clientService.getImageFromBucket(this.client.id)
       .subscribe(response => {
+        this.profileImage = 'assets/imgs/avatar-blank.png';
         this.client.imageUrl = `${API_CONFIG.bucketBaseUrl}/cp${this.client.id}.jpg`;
         this.blobToDataURL(response).then(dataUrl => {
           let str: string = dataUrl as string;
