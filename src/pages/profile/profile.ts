@@ -39,6 +39,7 @@ export class ProfilePage {
       this.clientService.findByEmail(localUser.email)
         .subscribe(response => {
           this.client = response as ClientDTO;
+          this.profileImage = 'assets/imgs/avatar-blank.png';
           this.getImageIfExists();
         },
           error => {
